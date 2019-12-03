@@ -1,26 +1,6 @@
 # Pong 0.1
 # A Pong clone built using Pygame
 
-"""
-To Do List:
-    > Paddles
-        > Move, Collision with Wall
-    > ball
-        > Randomize ball position
-        > Collision with Paddle and Wall
-    > Scoring System
-    > Game Over and Replay
-    > Sound
-    > Graphics
-    > Game Menu
-        > vs 2P
-            > Number of Matches
-        > Vs Cpu
-            > Number of Matches
-            > Dificulty
-        > Themes
-"""
-
 import pygame
 
 pygame.init()
