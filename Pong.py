@@ -44,8 +44,8 @@ class ball(object):
         self.y = y
         self.width = width
         self.height = height
-        self.dx = random.choice(ball_movement)
-        self.dy = random.choice(ball_movement)
+        self.dx = -10#random.choice(ball_movement)
+        self.dy = -10#random.choice(ball_movement)
 
     def draw(self, window):
         pygame.draw.rect(window, (255, 255, 255), (self.x, self.y, self.width, self.height))
@@ -53,24 +53,6 @@ class ball(object):
     def move(self, window):
         self.x += self.dx
         self.y += self.dy
-
-        # Collision with the Paddles
-        # Player 1
-        if (ball.x < paddle1.x + paddle1.width) and (ball.y < paddle1.y + 65 and ball.y > paddle1.y - 65):
-            ball.dx *= -1
-
-        # Player 2
-        if (ball.x > paddle2.x - paddle2.width) and (ball.y < paddle2.y + 65 and ball.y > paddle2.y - 65):
-            ball.dx *= -1
-
-        # Collision witht the Walls
-        # Top Wall
-        if ball.y <= (top_wall.y + top_wall.height):
-            ball.dy *= -1
-
-        # Bottom Wall
-        if ball.y >= (bottom_wall.y - bottom_wall.height):
-            ball.dy *= -1
 
 # Walls and Lines
 class lines(object):
@@ -97,7 +79,12 @@ class circles(object):
 
 ############### Game Functions ###############
 def redraw_game_window():
+    player1_score = font.render('P1: ' + str(p1_score), 1, (255, 255, 255))
+    player2_score = font.render('P2: ' + str(p2_score), 1, (255, 255, 255))
+
     window.fill((0, 0, 0))
+    window.blit(player1_score, (10, 10))
+    window.blit(player2_score, (490, 10))
     top_wall.draw(window)
     bottom_wall.draw(window)
     half_court.draw(window)
@@ -109,10 +96,9 @@ def redraw_game_window():
     ball.move(window)
     pygame.display.update()
 
-
-
 ############### Variables ###############
 run = True
+font = pygame.font.SysFont('comicsans', 30)
 top_wall = lines(0, 35, 600, 15)
 bottom_wall = lines(0, 365, 600, 15)
 half_court = lines(300, 35, 3, 330)
@@ -121,7 +107,8 @@ paddle1 = player(30, 170, 10, 75)
 paddle2 = player(565,170,10, 75)
 ball_movement = [-10, 10]
 ball = ball(350, 250, 15, 15)
-
+p1_score = 0
+p2_score = 0
 
 
 ############### Main Game ###############
@@ -136,5 +123,38 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+
+    # Scoring System
+    # Player 1
+    if ball.x > 590:
+        ball.x = 350
+        ball.y = 250
+        ball.dx *= -1
+        p1_score += 1
+
+    # Player 2
+    if ball.x < 0:
+        ball.x = 350
+        ball.y = 250
+        ball.dx *= -1
+        p2_score += 1
+
+    # Collision with the Paddles
+    # Player 1
+    if ball.x < 40 and (ball.y > paddle1.y - 30 and ball.y < paddle1.y + 75):
+        ball.dx *= -1
+
+    # Player 2
+    if (ball.x < 565 and ball.x > 550) and (ball.y > paddle2.y - 30 and ball.y < paddle2.y + 75):
+        ball.dx *= -1
+
+    # Collision with the Walls
+    # Top Wall
+    if ball.y <= (top_wall.y + top_wall.height):
+        ball.dy *= -1
+
+    # Bottom Wall
+    if ball.y >= (bottom_wall.y - bottom_wall.height):
+        ball.dy *= -1
 
 pygame.quit()
